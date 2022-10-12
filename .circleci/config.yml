@@ -54,11 +54,9 @@ jobs:
           key: frontend-build
       - slack/notify:
           event: pass
-          message: Front-end build succeeded
           template: basic_success_1
       - slack/notify:
           event: fail
-          message: Front-end build failed
           template: basic_fail_1
 
   build-backend:
@@ -79,11 +77,9 @@ jobs:
           key: backend-build
       - slack/notify:
           event: pass
-          message: Front-end build succeeded
           template: basic_success_1
       - slack/notify:
           event: fail
-          message: Front-end build failed
           template: basic_fail_1
 
 #   test-frontend:
