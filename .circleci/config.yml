@@ -101,6 +101,12 @@ jobs:
             cd frontend
             npm install
             npm run test
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
                 
   test-backend:
     docker:
@@ -121,6 +127,12 @@ jobs:
             cd backend
             npm install
             npm run test
+      - slack/notify:
+          event: pass
+          template: basic_success_1
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
             
 #   scan-frontend:
 #     docker:
