@@ -134,21 +134,51 @@ jobs:
           event: fail
           template: basic_fail_1
             
-#   scan-frontend:
-#     docker:
-#       # Docker image here
-#     steps:
-#       # Checkout code from git
-#       # Restore from cache
-#       # Your job code here
+  scan-frontend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      # Checkout code from git
+      - checkout
+      # Restore from cache
+      - restore_cache:
+          keys: [frontend-scan]
+      - save_cache:
+          paths: [frontend/node_modules_scan]
+          key: frontend-scan
+      # Your job code here
+      - run:
+          name: Front-end scan
+          command: |
+            cd frontend
+            npm install
+            npm audit --audit-level=critical
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
-#   scan-backend:
-#     docker:
-#       # Docker image here
-#     steps:
-#       # Checkout code from git
-#       # Restore from cache
-#       # Your job code here
+  scan-backend:
+    docker:
+      - image: circleci/node:13.8.0
+    steps:
+      # Checkout code from git
+      - checkout
+      # Restore from cache
+      - restore_cache:
+          keys: [backend-scan]
+      - save_cache:
+          paths: [backend/node_modules_scan]
+          key: backend-scan
+      # Your job code here
+      - run:
+          name: Back-end scan
+          command: |
+            cd backend
+            npm install
+            npm audit --audit-level=critical
+      - slack/notify:
+          event: fail
+          template: basic_fail_1
 
 #   deploy-infrastructure:
 #     docker:
@@ -329,10 +359,12 @@ workflows:
       - test-backend:
           requires: [build-backend]
           context: slack-integrate
-      # - scan-backend:
-      #     requires: [build-backend]
-      # - scan-frontend:
-      #     requires: [build-frontend]
+      - scan-backend:
+          requires: [build-backend]
+          context: slack-integrate
+      - scan-frontend:
+          requires: [build-frontend]
+          context: slack-integrate
       # - deploy-infrastructure:
       #     requires: [test-frontend, test-backend, scan-frontend, scan-backend]
       #     filters:
