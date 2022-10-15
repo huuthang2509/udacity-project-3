@@ -8,14 +8,17 @@ commands:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
       # Add parameter here   
-      stack-name:
+      BE-stack-name:
+        type: string
+      FE-stack-name:
         type: string
     steps:
       - run:
           name: Destroy environments
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name << parameters.stack-name >>
+            aws cloudformation delete-stack --stack-name << parameters.BE-stack-name >>
+            aws cloudformation delete-stack --stack-name << parameters.FE-stack-name >>
 
   # revert-migrations:
   #   description: Revert the last migration if successfully run in the current workflow.
@@ -198,11 +201,7 @@ jobs:
               --template-file .circleci/files/backend.yml \
               --tags project=udapeople \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-            sleep 10
-            aws cloudformation describe-stack-events --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-      - destroy-environment:
-          stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+              --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"     
       - run:
           name: Ensure front-end infrastructure exist
           command: |
@@ -211,8 +210,6 @@ jobs:
               --tags project=udapeople \
               --stack-name "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --parameter-overrides ID="${CIRCLE_WORKFLOW_ID:0:7}"
-      - destroy-environment:
-          stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
       - run:
           name: Add back-end ip to ansible inventory
           command: |
@@ -225,6 +222,9 @@ jobs:
           paths:
             - project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure
+      - destroy-environment:
+          BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+          FE-stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
 
 #   configure-infrastructure:
 #     docker:
