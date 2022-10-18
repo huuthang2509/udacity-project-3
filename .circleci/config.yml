@@ -220,8 +220,7 @@ jobs:
       - run:
           name: Install tar utility
           command: |
-            sudo apt-get update
-            sudo apt-get install -y gzip
+            yum install -y tar gzip
       - persist_to_workspace:
           root: ~/
           paths:
