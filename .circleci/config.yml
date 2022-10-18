@@ -222,9 +222,9 @@ jobs:
           command: |
             yum install -y tar gzip
       - persist_to_workspace:
-          root: ~/
+          root: ~/project
           paths:
-            - ~/project/.circleci/ansible/inventory.txt
+            - .circleci/ansible/inventory.txt
       - run:
           name: Check inventory file
           command: |
