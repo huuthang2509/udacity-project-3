@@ -228,7 +228,8 @@ jobs:
       - run:
           name: Check inventory file
           command: |
-            cat .circleci/ansible/inventory.txt
+            pwd
+            cat ~/project/.circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
@@ -255,7 +256,8 @@ jobs:
       - run:
           name: Check inventory file
           command: |
-            cat .circleci/ansible/inventory.txt
+            pwd
+            cat ~/project/.circleci/ansible/inventory.txt
       - run:
           name: Configure server
           command: |
