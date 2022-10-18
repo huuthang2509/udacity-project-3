@@ -1,0 +1,21 @@
+---
+
+- name: Install Python
+  shell: |
+    apt-get update
+    apt-get install -y python
+  # when: ansible_os_family == "Debian"
+
+- name: Upgrade packages
+  apt:
+    upgrade: yes
+    update_cache: yes
+
+- name: Install Node.js
+  shell: |
+    curl -fsSL https://deb.nodesource.com/setup_18.x | sudo -E bash - &&\
+    sudo apt-get install -y nodejs
+
+- name: Install pm2
+  shell: |
+    npm install pm2 -g
