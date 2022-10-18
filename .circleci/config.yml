@@ -218,9 +218,10 @@ jobs:
               --query "Stacks[0].Outputs[?OutputKey==InstancePublicIp].OutputValue" \
               --output text >> .circleci/ansible/inventory.txt
       - run:
-          name: Install tar utility
+          name: Install tar utility & check ansible inventory
           command: |
             yum install -y tar gzip
+            cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
           root: ~/project
           paths:
