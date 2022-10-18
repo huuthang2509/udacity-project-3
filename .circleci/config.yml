@@ -216,8 +216,8 @@ jobs:
             aws cloudformation describe-stacks \
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Stacks[0].Outputs[?OutputKey==InstancePublicIp].OutputValue" \
-              --output text >> .circleci/ansible/inventory.txt
-            cat .circleci/ansible/inventory.txt
+              --output text >> ~/project/.circleci/ansible/inventory.txt
+            cat ~/project/.circleci/ansible/inventory.txt
       - run:
           name: Install tar utility & check ansible inventory
           command: |
