@@ -224,7 +224,7 @@ jobs:
       - persist_to_workspace:
           root: ~/
           paths:
-            - project/.circleci/ansible/inventory.txt
+            - ~/project/.circleci/ansible/inventory.txt
       - run:
           name: Check inventory file
           command: |
@@ -257,7 +257,7 @@ jobs:
           name: Check inventory file
           command: |
             pwd
-            cat ~/project/.circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
       - run:
           name: Configure server
           command: |
