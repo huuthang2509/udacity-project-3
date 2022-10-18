@@ -217,6 +217,11 @@ jobs:
               --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
               --query "Stacks[0].Outputs[?OutputKey==InstancePublicIp].OutputValue" \
               --output text >> .circleci/ansible/inventory.txt
+      - run:
+          name: Install tar utility
+          command: |
+            sudo apt-get update
+            sudo apt-get install -y gzip
       - persist_to_workspace:
           root: ~/
           paths:
