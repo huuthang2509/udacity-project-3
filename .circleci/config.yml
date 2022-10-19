@@ -221,16 +221,15 @@ jobs:
           name: Install tar utility & check ansible inventory
           command: |
             yum install -y tar gzip
-            cat .circleci/ansible/inventory.txt
       - persist_to_workspace:
-          root: ~/project
+          root: ~/
           paths:
-            - .circleci/ansible/inventory.txt
+            - project/.circleci/ansible/inventory.txt
       - run:
           name: Check inventory file
           command: |
             pwd
-            cat ~/project/.circleci/ansible/inventory.txt
+            cat .circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure
       - destroy-environment:
           BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
@@ -249,7 +248,7 @@ jobs:
             - "4d:bb:4f:63:b1:51:54:03:ed:99:e2:de:d8:7d:4e:92"
       # attach workspace
       - attach_workspace:
-          at: ~/
+          at: ~/project/.circleci/ansible/inventory.txt
       - run:
           name: Install dependencies
           command: |
@@ -263,6 +262,7 @@ jobs:
           name: Configure server
           command: |
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
+            exit 1
       # Here's where you will add some code to rollback on failure  
       - destroy-environment:
           BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
