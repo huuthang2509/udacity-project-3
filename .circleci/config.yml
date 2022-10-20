@@ -262,11 +262,10 @@ jobs:
           name: Configure server
           command: |
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
-            exit 1
       # Here's where you will add some code to rollback on failure  
-      - destroy-environment:
-          BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-          FE-stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"    
+      # - destroy-environment:
+      #     BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+      #     FE-stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"    
 
 #   run-migrations:
 #     docker:
