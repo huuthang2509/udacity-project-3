@@ -3,7 +3,7 @@
 - name: Install Python
   shell: |
     apt-get update
-    apt-get install -y python
+    apt-get install -y python3
   # when: ansible_os_family == "Debian"
 
 - name: Upgrade packages
