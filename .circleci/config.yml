@@ -7,17 +7,22 @@ commands:
     description: Destroy back-end and front-end cloudformation stacks given a workflow ID.
     parameters:
       # Add parameter here   
-      BE-stack-name:
+      workflow_id:
         type: string
-      FE-stack-name:
-        type: string
+        default: ${CIRCLE_WORKFLOW_ID:0:7}
     steps:
       - run:
-          name: Destroy environments
+          name: Destroy backend environment
           when: on_fail
           command: |
-            aws cloudformation delete-stack --stack-name << parameters.BE-stack-name >>
-            aws cloudformation delete-stack --stack-name << parameters.FE-stack-name >>
+            aws cloudformation delete-stack --stack-name udapeople-backend-<< parameters.workflow_id >>
+      - run:
+          name: Destroy frontend environment
+          when: on_fail
+          command: |
+            S3_BUCKET_NAME="udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+            aws s3 rm s3://${S3_BUCKET_NAME} --recursive
+            aws cloudformation delete-stack --stack-name udapeople-frontend-<< parameters.workflow_id >>
 
   revert-migrations:
     description: Revert the last migration if successfully run in the current workflow. 
@@ -28,7 +33,7 @@ commands:
           when: on_fail
           command: |
             echo $(curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7})
-            SUCCESS = $(curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7})
+            SUCCESS=$(curl --insecure https://kvdb.io/${KVDB_BUCKET_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7})
             echo $SUCCESS
             if(( $SUCCESS==1 )); 
             then
@@ -36,17 +41,6 @@ commands:
               npm install
               npm run migrations:revert
             fi
-  empty-bucket:
-    description: Empty the bucket of all files.
-    parameters:
-      bucket-name:
-        type: string
-    steps:
-      - run:
-          name: Empty bucket
-          when: on_fail
-          command: |
-            aws s3 rm s3://${bucket-name} --recursive
             
 jobs:
   build-frontend:
@@ -344,12 +338,8 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # Here's where you will add some code to rollback on failure
-      - empty-bucket:
-          bucket-name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations
-      - destroy-environment:
-          BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-          FE-stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment
 
   deploy-backend:
     docker:
@@ -384,6 +374,7 @@ jobs:
       - run:
           name: Install aws-cli
           command: |
+            cd
             curl "https://awscli.amazonaws.com/awscli-exe-linux-x86_64.zip" -o "awscliv2.zip"
             unzip awscliv2.zip
             ./aws/install
@@ -399,13 +390,9 @@ jobs:
             echo "Contents of the inventory.txt file is -------"
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
-      # Here's where you will add some code to rollback on failure  
-      - empty-bucket:
-          bucket-name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
+      # Here's where you will add some code to rollback on failure
       - revert-migrations
-      - destroy-environment:
-          BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-          FE-stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment
 
   smoke-test:
     docker:
@@ -457,12 +444,8 @@ jobs:
               return 1
             fi
       # Here's where you will add some code to rollback on failure
-      - empty-bucket:
-          bucket-name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations
-      - destroy-environment:
-          BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-          FE-stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment
 
 #   cloudfront-update:
 #     docker:
