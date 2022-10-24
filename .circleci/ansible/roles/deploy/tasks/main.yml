@@ -7,7 +7,7 @@
   with_items:
     - tar
     - gzip
-    - gtar
+    - unzip
 
 - name: Extract backend build (include copy)
   unarchive:
