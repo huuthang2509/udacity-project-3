@@ -234,9 +234,7 @@ jobs:
             pwd
             cat .circleci/ansible/inventory.txt
       # Here's where you will add some code to rollback on failure
-      - destroy-environment:
-          BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
-          FE-stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
+      - destroy-environment
 
   configure-infrastructure:
     docker:
@@ -266,6 +264,7 @@ jobs:
           command: |
             ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
       # Here's where you will add some code to rollback on failure 
+      - destroy-environment
 
   run-migrations:
     docker:
@@ -299,7 +298,7 @@ jobs:
                 curl https://kvdb.io/${KVDB_BUCKET_ID}/migration_${CIRCLE_WORKFLOW_ID:0:7}  -d '1'
             fi
      # Here's where you will add some code to rollback on failure
-      - revert-migrations  
+      - revert-migrations
 
   deploy-frontend:
     docker:
