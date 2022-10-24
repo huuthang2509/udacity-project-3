@@ -39,14 +39,14 @@ commands:
   empty-bucket:
     description: Empty the bucket of all files.
     parameters:
-      S3_BUCKET_NAME:
+      bucket-name:
         type: string
     steps:
       - run:
           name: Empty bucket
           when: on_fail
           command: |
-            aws s3 rm s3://${S3_BUCKET_NAME} --recursive
+            aws s3 rm s3://${bucket-name} --recursive
             
 jobs:
   build-frontend:
@@ -457,6 +457,8 @@ jobs:
               return 1
             fi
       # Here's where you will add some code to rollback on failure
+      - empty-bucket:
+          bucket-name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations
       - destroy-environment:
           BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
