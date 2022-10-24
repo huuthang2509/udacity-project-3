@@ -283,6 +283,10 @@ jobs:
             npm run migrations > migrations_dump.txt
             cat migrations_dump.txt
       - run:
+          name: Disable certificate verification
+          command: |
+            echo "insecure" >> ~/.curlrc
+      - run:
           name: Send migration results to kvdb.io OR memstash.io
           command: |
             if grep -q "has been executed successfully." ~/project/backend/migrations_dump.txt
