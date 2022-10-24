@@ -9,6 +9,9 @@
     - gzip
     - unzip
 
+- name: Create app directory
+  shell: |
+    mkdir -p /home/ubuntu/app
 - name: Extract backend build (include copy)
   unarchive:
     src: ~/project/artifact.tar.gz
