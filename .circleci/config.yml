@@ -36,6 +36,17 @@ commands:
               npm install
               npm run migrations:revert
             fi
+  empty-bucket:
+    description: Empty the bucket of all files.
+    parameters:
+      S3_BUCKET_NAME:
+        type: string
+    steps:
+      - run:
+          name: Empty bucket
+          when: on_fail
+          command: |
+            aws s3 rm s3://${S3_BUCKET_NAME} --recursive
             
 jobs:
   build-frontend:
@@ -333,6 +344,8 @@ jobs:
             tar -czvf artifact-"${CIRCLE_WORKFLOW_ID:0:7}".tar.gz dist
             aws s3 cp dist s3://udapeople-${CIRCLE_WORKFLOW_ID:0:7} --recursive
       # Here's where you will add some code to rollback on failure
+      - empty-bucket:
+          bucket-name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations
       - destroy-environment:
           BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
@@ -387,6 +400,8 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml
       # Here's where you will add some code to rollback on failure  
+      - empty-bucket:
+          bucket-name: "udapeople-${CIRCLE_WORKFLOW_ID:0:7}"
       - revert-migrations
       - destroy-environment:
           BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
@@ -441,7 +456,11 @@ jobs:
             else
               return 1
             fi
-      # Here's where you will add some code to rollback on failure  
+      # Here's where you will add some code to rollback on failure
+      - revert-migrations
+      - destroy-environment:
+          BE-stack-name: "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}"
+          FE-stack-name: "udapeople-frontend-${CIRCLE_WORKFLOW_ID:0:7}"
 
 #   cloudfront-update:
 #     docker:
@@ -510,8 +529,8 @@ workflows:
           requires: [run-migrations]
       - deploy-backend:
           requires: [run-migrations]
-      # - smoke-test:
-      #     requires: [deploy-backend, deploy-frontend]
+      - smoke-test:
+          requires: [deploy-backend, deploy-frontend]
       # - cloudfront-update:
       #     requires: [smoke-test]
       # - cleanup:
