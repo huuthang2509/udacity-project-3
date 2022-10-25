@@ -97,10 +97,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [frontend-test]
-      - save_cache:
-          paths: [frontend/node_modules_test]
-          key: frontend-test
+          keys: [frontend-build]
       # Your job code here
       - run:
           name: Front-end tests
@@ -123,10 +120,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend-test]
-      - save_cache:
-          paths: [backend/node_modules_test]
-          key: backend-test
+          keys: [backend-build]
       # Your job code here
       - run:
           name: Back-end tests
@@ -149,10 +143,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [frontend-scan]
-      - save_cache:
-          paths: [frontend/node_modules_scan]
-          key: frontend-scan
+          keys: [frontend-build]
       # Your job code here
       - run:
           name: Front-end scan
@@ -173,10 +164,7 @@ jobs:
       - checkout
       # Restore from cache
       - restore_cache:
-          keys: [backend-scan]
-      - save_cache:
-          paths: [backend/node_modules_scan]
-          key: backend-scan
+          keys: [backend-build]
       # Your job code here
       - run:
           name: Back-end scan
