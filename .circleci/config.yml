@@ -243,6 +243,11 @@ jobs:
           command: |
             apk add --update ansible
       - run:
+          name: Install aws-cli
+          command: |
+            apk add --no-cache aws-cli
+            aws --version
+      - run:
           name: Check inventory file
           command: |
             pwd
