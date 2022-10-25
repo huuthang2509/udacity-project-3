@@ -28,6 +28,23 @@
     echo $TYPEORM_PORT
     echo $TYPEORM_USERNAME
     
+- name: Start backend
+  shell: |
+    cd /home/ubuntu/app
+    /usr/bin/pm2 start /home/ubuntu/app/dist/main.js --name backend -f
+  environment:
+    ENVIRONMENT: production
+    NODE_ENV: production
+    TYPEORM_CONNECTION: postgres
+    TYPEORM_MIGRATIONS_DIR: ~/src/migrations
+    TYPEORM_MIGRATIONS: ~/src/migrations/*.ts
+    TYPEORM_ENTITIES: ~/src/modules/domain/**/*.entity.ts
+    TYPEORM_HOST: db-section-4.co0bsguz8zuv.us-east-1.rds.amazonaws.com
+    TYPEORM_PORT: 5432
+    TYPEORM_USERNAME: postgres
+    TYPEORM_PASSWORD: huuthang2509
+    TYPEORM_DATABASE: initialdb
+    
 # - name: Start application
 #   shell: |
 #     cd /home/ubuntu/app
