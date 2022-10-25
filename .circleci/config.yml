@@ -414,6 +414,10 @@ jobs:
             unzip awscliv2.zip
             sudo ./aws/install
       - run:
+          name: Open port 3030
+          command: |
+            sudo ufw allow 3030
+      - run:
           name: Backend smoke test.
           command: |
             export BACKEND_IP=$(tail -1 ~/project/.circleci/ansible/inventory.txt)
@@ -439,8 +443,8 @@ jobs:
               return 1
             fi
       # Here's where you will add some code to rollback on failure
-      - revert-migrations
-      - destroy-environment
+      # - revert-migrations
+      # - destroy-environment
 
 
 #   cloudfront-update:
