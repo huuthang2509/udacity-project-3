@@ -18,6 +18,11 @@
     src: ~/project/artifact.tar.gz
     dest: /home/ubuntu/app
 
+- name: Check env
+  shell: |
+    echo $TYPEORM_PORT
+    echo $TYPEORM_USERNAME
+    
 # - name: Start application
 #   shell: |
 #     cd /home/ubuntu/app
