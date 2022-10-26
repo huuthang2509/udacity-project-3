@@ -30,6 +30,7 @@
 
 - name: Check env
   shell: |
+    id
     echo $TYPEORM_PORT
     echo $TYPEORM_USERNAME
     
