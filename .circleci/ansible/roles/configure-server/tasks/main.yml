@@ -5,12 +5,17 @@
     upgrade: yes
     update_cache: yes
 
-- name: Install Node.js
+- name: Install nvm
   become: true
   become_user: ubuntu
   shell: |
     curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash && \
-    . ~/.bashrc && \
+    . ~/.bashrc
+
+- name: Install nodejs 13.8.0
+  become: true
+  become_user: ubuntu
+  shell: |
     nvm install 13.8.0 && \
     nvm use 13.8.0
 
