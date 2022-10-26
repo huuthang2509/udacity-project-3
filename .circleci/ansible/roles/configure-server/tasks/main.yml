@@ -6,8 +6,8 @@
     update_cache: yes
 
 - name: Install Node.js
-  # become: true
-  # become_user: ubuntu
+  become: true
+  become_user: ubuntu
   shell: |
     curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
     . ~/.bashrc
@@ -15,10 +15,14 @@
     nvm use 13.8.0
 
 - name: Check npm
+  become: true
+  become_user: ubuntu
   shell: |
     node -v
     npm -v
 
 - name: Install pm2
+  become: true
+  become_user: ubuntu
   shell: |
     npm install pm2 -g
