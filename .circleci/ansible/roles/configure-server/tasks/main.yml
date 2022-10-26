@@ -9,7 +9,12 @@
   become: true
   become_user: ubuntu
   shell: |
-    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash && \
+    curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+
+- name: Apply new env to use nvm
+  become: true
+  become_user: ubuntu
+  shell: |
     . ~/.bashrc
 
 - name: Install nodejs 13.8.0
