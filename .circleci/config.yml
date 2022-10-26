@@ -259,7 +259,7 @@ jobs:
       - run:
           name: Configure server
           command: |
-            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml -v
+            ansible-playbook -i ~/project/.circleci/ansible/inventory.txt ~/project/.circleci/ansible/configure-server.yml
       # Here's where you will add some code to rollback on failure 
       - destroy-environment
 
@@ -310,9 +310,10 @@ jobs:
       - run:
           name: Install Nodejs
           command: |
-            yum -y install curl
-            curl -sL https://rpm.nodesource.com/setup_14.x | bash -
-            yum install -y nodejs
+            curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+            source ~/.bashrc
+            nvm install 13.8.0
+            nvm use 13.8.0
             echo "Node version: $(node -v)"
       - run:
           name: Get backend url
@@ -365,8 +366,10 @@ jobs:
       - run:
           name: Install Nodejs
           command: |
-            curl -fsSL https://deb.nodesource.com/setup_14.x | sudo -E bash - &&\
-            sudo apt-get install -y nodejs
+            curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
+            source ~/.bashrc
+            nvm install 13.8.0
+            nvm use 13.8.0
       - run:
           name: Install aws-cli
           command: |
