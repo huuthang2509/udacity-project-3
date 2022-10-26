@@ -13,7 +13,11 @@
     . ~/.bashrc
     nvm install 13.8.0
     nvm use 13.8.0
+
+- name: Check npm
+  shell: |
     node -v
+    npm -v
 
 - name: Install pm2
   shell: |
