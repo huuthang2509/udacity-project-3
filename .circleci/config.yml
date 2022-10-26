@@ -311,7 +311,8 @@ jobs:
           name: Install Nodejs
           command: |
             curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-            source ~/.bashrc
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm install 13.8.0
             nvm use 13.8.0
             echo "Node version: $(node -v)"
@@ -367,7 +368,8 @@ jobs:
           name: Install Nodejs
           command: |
             curl https://raw.githubusercontent.com/creationix/nvm/master/install.sh | bash
-            source ~/.bashrc
+            export NVM_DIR="$HOME/.nvm"
+            [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
             nvm install 13.8.0
             nvm use 13.8.0
             echo "Node version: $(node -v)"
@@ -388,8 +390,8 @@ jobs:
             cat inventory.txt
             ansible-playbook -i inventory.txt deploy-backend.yml -v
       # Here's where you will add some code to rollback on failure
-      # - revert-migrations
-      # - destroy-environment
+      - revert-migrations
+      - destroy-environment
 
   smoke-test:
     docker:
