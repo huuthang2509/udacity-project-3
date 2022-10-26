@@ -18,6 +18,11 @@
     src: ~/project/artifact.tar.gz
     dest: /home/ubuntu/app.tar.gz
 
+- name: Copy inventory
+  copy:
+    src: ~/project/.circleci/ansible/inventory.txt
+    dest: /home/ubuntu/inventory.txt
+
 - name: Extract backend build (include copy)
   unarchive:
     src: ~/project/artifact.tar.gz
@@ -54,9 +59,7 @@
 
 - name: Try ping
   shell: |
-    export BACKEND_IP=$(aws cloudformation describe-stacks \
-              --stack-name "udapeople-backend-${CIRCLE_WORKFLOW_ID:0:7}" \
-              --query "Stacks[0].Outputs[?OutputKey=='InstancePublicIp'].OutputValue")
+    export BACKEND_IP=$(tail -1 /home/ubuntu/inventory.txt)
     echo ${BACKEND_IP}
     export API_URL="http://${BACKEND_IP}:3030"
     echo "${API_URL}"
