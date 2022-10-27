@@ -477,17 +477,20 @@ jobs:
     steps:
       # Checkout code from git
       - checkout
+      # - run:
+      #     name: Get stack workflow id & list all stacks
+      #     command: |
+      #       export WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
+      #       export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
+      #         --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
+      #       echo Stack names: "${STACKS[@]}"
       - run:
-          name: Get stack workflow id & list all stacks
+          name: Remove old stacks and files
           command: |
             export WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
-            echo Stack names: "${STACKS[@]}"
-      - run:
-          name: Remove old stacks and files
-          command: |
-            echo Stack names: "${STACKS[@]}"
+            echo All stack: "${STACKS[@]}"
             for stack in "${STACKS[@]}"
             do
               echo "Checking stack: ${stack}"
