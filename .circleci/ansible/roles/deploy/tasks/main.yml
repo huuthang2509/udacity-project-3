@@ -49,16 +49,3 @@
     pm2 stop default
     npm run prestart:prod
     pm2 start npm -- start
-
-# - name: Try ping
-#   shell: |
-#     export BACKEND_IP=$(tail -1 /home/ubuntu/inventory.txt)
-#     echo ${BACKEND_IP}
-#     export API_URL="http://${BACKEND_IP}:3030"
-#     echo "${API_URL}"
-#     if curl "${API_URL}/api/status" | grep "ok"
-#     then
-#         return 0
-#     else
-#         return 1
-#     fi
