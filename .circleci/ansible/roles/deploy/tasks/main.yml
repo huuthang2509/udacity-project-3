@@ -46,6 +46,5 @@
     [ -s "$NVM_DIR/bash_completion" ] && \. "$NVM_DIR/bash_completion"
     cd /home/ubuntu/app
     npm install
-    pm2 stop default
-    npm run prestart:prod
+    pm2 kill
     pm2 start npm -- start
