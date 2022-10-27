@@ -487,20 +487,26 @@ jobs:
       - run:
           name: Remove old stacks and files
           command: |
+            echo Stack names: "${STACKS[@]}"
             for stack in "${STACKS[@]}"
             do
+              echo "Checking stack: ${stack}"
               if [[ "$stack" == *"udapeople"* ]]
               then
+                echo 1
+                echo "${stack: -7}"
+                echo "${WorkflowID}"
                 if [[ "${stack: -7}" != "${WorkflowID}" ]]
                 then
+                  echo 2
                   if [[ "$stack" == *"frontend"* ]]
                   then
                     echo "Removing frontend stack: $stack"
                     aws s3 rm "s3://udapeople-${stack: -7}" --recursive
-                    aws cloudformation delete-stack --stack-name $stack
+                    aws cloudformation delete-stack --stack-name "$stack"
                   else
                     echo "Removing backend stack: $stack"
-                    aws cloudformation delete-stack --stack-name $stack
+                    aws cloudformation delete-stack --stack-name "$stack"
                   fi
                 fi
               fi
