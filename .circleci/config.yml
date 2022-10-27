@@ -478,23 +478,33 @@ jobs:
       # Checkout code from git
       - checkout
       - run:
-          name: Get old stack workflow id
+          name: Get stack workflow id & list all stacks
           command: |
-            export OldWorkflowID=$(aws cloudformation \
-              list-exports --query "Exports[?Name==\`WorkflowID\`].Value" \
-              --no-paginate --output text)
-            echo OldWorkflowID: "${OldWorkflowID}"
-            echo CIRCLE_WORKFLOW_ID: "${CIRCLE_WORKFLOW_ID:0:7}"
+            export WorkflowID="${CIRCLE_WORKFLOW_ID:0:7}"
             export STACKS=($(aws cloudformation list-stacks --query "StackSummaries[*].StackName" \
               --stack-status-filter CREATE_COMPLETE --no-paginate --output text))
             echo Stack names: "${STACKS[@]}"
-      # - run:
-      #     name: Remove old stacks and files
-      #     command: |
-      #       if [[ "${CIRCLE_WORKFLOW_ID:0:7}" != "${OldWorkflowID}" ]]
-      #       then
-      #         # your code here
-      #       fi
+      - run:
+          name: Remove old stacks and files
+          command: |
+            for stack in "${STACKS[@]}"
+            do
+              if [[ "$stack" == *"udapeople"* ]]
+              then
+                if [[ "${stack: -7}" != "${WorkflowID}" ]]
+                then
+                  if [[ "$stack" == *"frontend"* ]]
+                  then
+                    echo "Removing frontend stack: $stack"
+                    aws s3 rm "s3://udapeople-${stack: -7}" --recursive
+                    aws cloudformation delete-stack --stack-name $stack
+                  else
+                    echo "Removing backend stack: $stack"
+                    aws cloudformation delete-stack --stack-name $stack
+                  fi
+                fi
+              fi
+            done
             
 
 workflows:
