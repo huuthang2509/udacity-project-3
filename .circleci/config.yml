@@ -486,7 +486,8 @@ jobs:
             echo All stack: "${STACKS[@]}"
             for stack in "${STACKS[@]}"
             do
-              echo "\nChecking stack: ${stack}"
+              echo ""
+              echo "Checking stack: ${stack}"
               if [[ "$stack" == *"udapeople"* ]]
               then
                 if [[ "${stack: -7}" != "${WorkflowID}" ]]
